@@ -39,9 +39,10 @@ module(MANAGED_RESOURCES_DATA_SOURCE, []).run([
     };
 
     const addEnvironments = (
-      _application: Application,
+      application: Application,
       data: IManagedApplicationSummary<'resources' | 'artifacts' | 'environments'>,
     ) => {
+      application.isManagementPaused = data.applicationPaused;
       return $q.when(data);
     };
 
@@ -60,9 +61,10 @@ module(MANAGED_RESOURCES_DATA_SOURCE, []).run([
       category: DELIVERY_KEY,
       optional: true,
       optIn: true,
-      hidden: true,
+      label: 'Environments',
       icon: 'fa fa-fw fa-xs fa-code-branch',
-      iconName: 'spCIBranch',
+      iconName: 'spEnvironments',
+      description: '[beta] Artifacts and environments managed by Spinnaker',
       loader: loadEnvironments,
       onLoad: addEnvironments,
       defaultData: {

@@ -3,7 +3,7 @@ import { IPromise } from 'angular';
 import { API } from 'core/api';
 import { StatefulConstraintStatus } from 'core/domain';
 
-export interface IPinArtifactVersionRequest {
+export interface IArtifactVersionRequest {
   application: string;
   environment: string;
   reference: string;
@@ -11,10 +11,17 @@ export interface IPinArtifactVersionRequest {
   comment: string;
 }
 
+export interface IUnpinArtifactVersionRequest {
+  application: string;
+  environment: string;
+  reference: string;
+}
+
 export interface IUpdateConstraintStatusRequest {
   application: string;
   environment: string;
   type: string;
+  reference: string;
   version: string;
   status: StatefulConstraintStatus;
 }
@@ -26,10 +33,41 @@ export class ManagedWriter {
     reference,
     version,
     comment,
-  }: IPinArtifactVersionRequest): IPromise<void> {
+  }: IArtifactVersionRequest): IPromise<void> {
     return API.one('managed')
       .one('application', application)
       .one('pin')
+      .post({
+        targetEnvironment: environment,
+        reference,
+        version,
+        comment,
+      });
+  }
+
+  public static unpinArtifactVersion({
+    application,
+    environment,
+    reference,
+  }: IUnpinArtifactVersionRequest): IPromise<void> {
+    return API.one('managed')
+      .one('application', application)
+      .one('pin')
+      .one(environment)
+      .withParams({ reference })
+      .remove();
+  }
+
+  public static markArtifactVersionAsBad({
+    application,
+    environment,
+    reference,
+    version,
+    comment,
+  }: IArtifactVersionRequest): IPromise<void> {
+    return API.one('managed')
+      .one('application', application)
+      .one('veto')
       .post({
         targetEnvironment: environment,
         reference,
@@ -42,6 +80,7 @@ export class ManagedWriter {
     application,
     environment,
     type,
+    reference,
     version,
     status,
   }: IUpdateConstraintStatusRequest): IPromise<void> {
@@ -51,6 +90,7 @@ export class ManagedWriter {
       .one('constraint')
       .post({
         type,
+        artifactReference: reference,
         artifactVersion: version,
         status,
       });

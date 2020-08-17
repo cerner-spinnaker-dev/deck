@@ -1,9 +1,9 @@
-import { Registry } from 'core/registry';
+import { INotificationTypeConfig } from 'core/domain';
 
 import { MicrosoftTeamsNotificationType } from './MicrosoftTeamsNotificationType';
 
-Registry.pipeline.registerNotification({
+export const microsoftTeamsNotification: INotificationTypeConfig = {
   component: MicrosoftTeamsNotificationType,
   key: 'microsoftteams',
   label: 'Microsoft Teams',
-});
+};

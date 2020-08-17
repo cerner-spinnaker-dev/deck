@@ -5,6 +5,7 @@ export enum ManagedResourceStatus {
   CREATED = 'CREATED',
   DIFF = 'DIFF',
   CURRENTLY_UNRESOLVABLE = 'CURRENTLY_UNRESOLVABLE',
+  MISSING_DEPENDENCY = 'MISSING_DEPENDENCY',
   ERROR = 'ERROR',
   HAPPY = 'HAPPY',
   PAUSED = 'PAUSED',
@@ -85,6 +86,11 @@ export interface IManagedArtifactVersion {
     name: string;
     state: 'current' | 'deploying' | 'approved' | 'pending' | 'previous' | 'vetoed' | 'skipped';
     pinned?: {
+      at: string;
+      by: string;
+      comment?: string;
+    };
+    vetoed?: {
       at: string;
       by: string;
       comment?: string;

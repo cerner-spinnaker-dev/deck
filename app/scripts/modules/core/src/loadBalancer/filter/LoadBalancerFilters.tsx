@@ -4,9 +4,9 @@ import { $rootScope } from 'ngimport';
 import { Subscription } from 'rxjs';
 
 import { Application } from 'core/application';
-import { CloudProviderLabel, CloudProviderLogo } from 'core/cloudProvider';
-import { ISortFilter, digestDependentFilters } from 'core/filterModel';
+import { ISortFilter, digestDependentFilters, FilterCheckbox } from 'core/filterModel';
 import { FilterSection } from 'core/cluster/filter/FilterSection';
+import { FilterSearch } from 'core/cluster/filter/FilterSearch';
 import { LoadBalancerState } from 'core/state';
 
 const poolValueCoordinates = [
@@ -148,12 +148,6 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
     return compact(uniq(map(this.props.app.loadBalancers.data, option) as string[])).sort();
   };
 
-  private clearFilters = (): void => {
-    LoadBalancerState.filterService.clearFilters();
-    LoadBalancerState.filterModel.asFilterModel.applyParamsToUrl();
-    LoadBalancerState.filterService.updateLoadBalancerGroups(this.props.app);
-  };
-
   private handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -185,33 +179,17 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
       detailHeadings,
       availabilityZoneHeadings,
       sortFilter,
-      tags,
     } = this.state;
 
     return (
-      <div>
+      <div className="insight-filter-content">
         <div className="heading">
-          <span
-            className="btn btn-default btn-xs"
-            style={{ visibility: tags.length > 0 ? 'inherit' : 'hidden' }}
-            onClick={this.clearFilters}
-          >
-            Clear All
-          </span>
-          <FilterSection heading="Search" expanded={true} helpKey="loadBalancer.search">
-            <form className="form-horizontal" role="form">
-              <div className="form-group nav-search">
-                <input
-                  type="search"
-                  className="form-control input-sm"
-                  value={sortFilter.filter}
-                  onBlur={this.handleSearchBlur}
-                  onChange={this.handleSearchChange}
-                  style={{ width: '85%', display: 'inline-block' }}
-                />
-              </div>
-            </form>
-          </FilterSection>
+          <FilterSearch
+            helpKey="loadBalancer.search"
+            value={sortFilter.filter}
+            onBlur={this.handleSearchBlur}
+            onSearchChange={this.handleSearchChange}
+          />
         </div>
         {loadBalancersLoaded && (
           <div className="content">
@@ -327,33 +305,3 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
     );
   }
 }
-
-const FilterCheckbox = (props: {
-  heading: string;
-  sortFilterType: { [key: string]: boolean };
-  onChange: () => void;
-  isCloudProvider?: boolean;
-}): JSX.Element => {
-  const { heading, isCloudProvider, onChange, sortFilterType } = props;
-  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    sortFilterType[heading] = Boolean(value);
-    onChange();
-  };
-  return (
-    <div className="checkbox">
-      <label>
-        <input type="checkbox" checked={Boolean(sortFilterType[heading])} onChange={changeHandler} />
-        {!isCloudProvider ? (
-          heading
-        ) : (
-          <>
-            <CloudProviderLogo provider="heading" height="'14px'" width="'14px'" />
-            <CloudProviderLabel provider={heading} />
-          </>
-        )}
-      </label>
-    </div>
-  );
-};

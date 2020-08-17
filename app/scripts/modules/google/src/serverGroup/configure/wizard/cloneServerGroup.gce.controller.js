@@ -217,6 +217,7 @@ angular
         const { locationToInstanceTypesMap } = c.backingData.credentialsKeyedByAccount[c.credentials];
 
         const customInstanceChoices = [
+          _.get(c, 'viewState.customInstance.instanceFamily'),
           _.get(c, 'viewState.customInstance.vCpuCount'),
           _.get(c, 'viewState.customInstance.memory'),
         ];
@@ -284,6 +285,10 @@ angular
 
               if (loadBalancerDetails.loadBalancerType === 'HTTP') {
                 metadata['global-load-balancer-names'] = metadata['global-load-balancer-names'].concat(
+                  loadBalancerDetails.listeners.map(listener => listener.name),
+                );
+              } else if (loadBalancerDetails.loadBalancerType === 'INTERNAL_MANAGED') {
+                metadata['load-balancer-names'] = metadata['load-balancer-names'].concat(
                   loadBalancerDetails.listeners.map(listener => listener.name),
                 );
               } else if (loadBalancerDetails.loadBalancerType === 'SSL') {

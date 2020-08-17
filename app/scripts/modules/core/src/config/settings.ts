@@ -30,12 +30,10 @@ export interface IFeatures {
   displayTimestampsInUserLocalTime?: boolean;
   dockerBake?: boolean;
   entityTags?: boolean;
+  executionMarkerInformationModal?: boolean;
   fiatEnabled?: boolean;
-  gceScaleDownControlsEnabled?: boolean;
   gceStatefulMigsEnabled?: boolean;
   iapRefresherEnabled?: boolean;
-  // todo(mneterval): remove prior to release 1.21
-  legacyArtifactsEnabled?: boolean;
   managedDelivery?: boolean;
   managedServiceAccounts?: boolean;
   managedResources?: boolean;
@@ -73,11 +71,6 @@ export interface ISpinnakerSettings {
   authEndpoint: string;
   authTtl: number;
   bakeryDetailUrl: string;
-  changelog?: {
-    accessToken?: string;
-    fileName: string;
-    gistId: string;
-  };
   checkForUpdates: boolean;
   debugEnabled: boolean;
   defaultInstancePort: number;
@@ -135,10 +128,11 @@ export interface ISpinnakerSettings {
   useClassicFirewallLabels: boolean;
 }
 
-export const SETTINGS: ISpinnakerSettings = (window as any).spinnakerSettings;
+export const SETTINGS: ISpinnakerSettings = (window as any).spinnakerSettings || {};
 
 // Make sure to set up some reasonable default settings fields so we do not have to keep checking if they exist everywhere
 SETTINGS.feature = SETTINGS.feature || {};
+SETTINGS.feature.roscoMode = SETTINGS.feature.roscoMode ?? true;
 SETTINGS.analytics = SETTINGS.analytics || {};
 SETTINGS.providers = SETTINGS.providers || {};
 SETTINGS.defaultTimeZone = SETTINGS.defaultTimeZone || 'America/Los_Angeles';

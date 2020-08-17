@@ -1,4 +1,4 @@
-import { uniq, isNil, cloneDeep, intersection, memoize, defaults, fromPairs } from 'lodash';
+import { uniq, isNil, cloneDeep, intersection, memoize, fromPairs } from 'lodash';
 
 import { Application } from 'core/application/application.model';
 import {
@@ -67,17 +67,7 @@ export class PipelineRegistry {
   }
 
   public registerNotification(notificationConfig: INotificationTypeConfig): void {
-    if (SETTINGS.notifications) {
-      const notificationSetting: { enabled: boolean; botName?: string } =
-        SETTINGS.notifications?.[notificationConfig.key];
-      if (notificationSetting && notificationSetting.enabled) {
-        const config = cloneDeep(notificationConfig);
-        config.config = { ...notificationSetting };
-        this.notificationTypes.push(config);
-      }
-    } else {
-      this.notificationTypes.push(notificationConfig);
-    }
+    this.notificationTypes.push(notificationConfig);
   }
 
   public registerTrigger(triggerConfig: ITriggerTypeConfig): void {
@@ -162,15 +152,6 @@ export class PipelineRegistry {
     return artifactKindConfig.editCmp;
   }
 
-  public mergeArtifactKind(artifactKindConfig: IArtifactKindConfig): void {
-    const index = this.artifactKinds.findIndex(ak => ak.key === artifactKindConfig.key);
-    if (index === -1) {
-      throw new Error(`could not find existing artifact kind config for key ${artifactKindConfig.key}`);
-    }
-    const originalArtifactKind = this.artifactKinds[index];
-    defaults(originalArtifactKind, artifactKindConfig);
-  }
-
   public getExecutionTransformers(): ITransformer[] {
     return this.transformers;
   }
@@ -227,7 +208,7 @@ export class PipelineRegistry {
     providersFromStage = providersFromStage.filter((providerKey: string) => {
       const providerAccounts = accounts.filter(acc => acc.cloudProvider === providerKey);
       return !!providerAccounts.find(acc => {
-        const provider = CloudProviderRegistry.getProvider(acc.cloudProvider, acc.skin);
+        const provider = CloudProviderRegistry.getProvider(acc.cloudProvider);
         return !isExcludedStageType(type, provider);
       });
     });
@@ -252,7 +233,7 @@ export class PipelineRegistry {
     );
     configurableStageTypes = configurableStageTypes.filter(type => {
       return !accounts.every(a => {
-        const p = CloudProviderRegistry.getProvider(a.cloudProvider, a.skin);
+        const p = CloudProviderRegistry.getProvider(a.cloudProvider);
         return isExcludedStageType(type, p);
       });
     });

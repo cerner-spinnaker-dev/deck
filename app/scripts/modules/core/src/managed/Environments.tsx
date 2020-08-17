@@ -13,6 +13,7 @@ import { ColumnHeader } from './ColumnHeader';
 import { ArtifactsList } from './ArtifactsList';
 import { EnvironmentsList } from './EnvironmentsList';
 import { ArtifactDetail } from './ArtifactDetail';
+import { EnvironmentsHeader } from './EnvironmentsHeader';
 
 import styles from './Environments.module.css';
 
@@ -66,7 +67,7 @@ interface IEnvironmentsProps {
 export function Environments({ app }: IEnvironmentsProps) {
   const dataSource: ApplicationDataSource<IManagedApplicationEnvironmentSummary> = app.getDataSource('environments');
   const {
-    data: { environments, artifacts, resources, hasManagedResources },
+    data: { environments, artifacts, resources },
     status,
     loaded,
   } = useDataSource(dataSource);
@@ -123,7 +124,7 @@ export function Environments({ app }: IEnvironmentsProps) {
     );
   }
 
-  const unmanaged = loaded && !hasManagedResources;
+  const unmanaged = loaded && artifacts.length == 0 && resources.length == 0;
   const gettingStartedLink = SETTINGS.managedDelivery?.gettingStartedUrl || defaultGettingStartedUrl;
   if (unmanaged) {
     return (
@@ -140,7 +141,7 @@ export function Environments({ app }: IEnvironmentsProps) {
   return (
     <div className={styles.mainContent}>
       <div className={styles.artifactsColumn}>
-        <ColumnHeader text="Artifacts" icon="artifact" />
+        <ColumnHeader text="Versions" icon="artifact" />
         <ArtifactsList
           artifacts={artifacts}
           selectedVersion={selectedVersion}
@@ -157,6 +158,13 @@ export function Environments({ app }: IEnvironmentsProps) {
             show && (
               <animated.div key={key} className={styles.environmentsPane} style={props}>
                 <ColumnHeader text="Environments" icon="environment" />
+                <EnvironmentsHeader
+                  app={app}
+                  resourceInfo={{
+                    managed: resources.filter(r => !r.isPaused).length,
+                    total: resources.length,
+                  }}
+                />
                 <EnvironmentsList application={app} {...{ environments, artifacts, resourcesById }} />
               </animated.div>
             ),

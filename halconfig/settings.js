@@ -7,23 +7,13 @@ var authEndpoint = gateHost + '/auth/user';
 var bakeryDetailUrl = gateHost + '/bakery/logs/{{context.region}}/{{context.status.resourceId}}';
 var canaryFeatureDisabled = '{%canary.featureEnabled%}' !== 'true';
 var canaryStagesEnabled = '{%canary.stages%}' === 'true';
-var changelogGistId = '{%changelog.gist.id%}';
-var changelogGistName = '{%changelog.gist.name%}';
 var chaosEnabled = '{%features.chaos%}' === 'true';
 var defaultCanaryJudge = '{%canary.defaultJudge%}';
 var defaultMetricsStore = '{%canary.defaultMetricsStore%}';
 var defaultMetricsAccountName = '{%canary.defaultMetricsAccount%}';
 var defaultStorageAccountName = '{%canary.defaultStorageAccount%}';
-var displayTimestampsInUserLocalTime = '{%features.displayTimestampsInUserLocalTime%}' === 'true';
-var entityTagsEnabled = false;
 var fiatEnabled = '{%features.fiat%}' === 'true';
-var gceScaleDownControlsEnabled = '{%features.gceScaleDownControlsEnabled%}' === 'true';
-var gceStatefulMigsEnabled = '{%features.gceStatefulMigsEnabled%}' === 'true';
-var iapRefresherEnabled = '{%features.iapRefresherEnabled%}' === 'true';
-var maxPipelineAgeDays = '{%maxPipelineAgeDays%}';
 var mineCanaryEnabled = '{%features.mineCanary%}' === 'true';
-var notificationsEnabled = '{%notifications.enabled%}' === 'true';
-var onDemandClusterThreshold = '{%onDemandClusterThreshold%}';
 var pipelineTemplatesEnabled = '{%features.pipelineTemplates%}' === 'true';
 var reduxLoggerEnabled = '{%canary.reduxLogger%}' === 'true';
 var showAllConfigsEnabled = '{%canary.showAllCanaryConfigs%}' === 'true';
@@ -40,28 +30,18 @@ var githubStatus = {
 var templatesEnabled = '{%canary.templatesEnabled%}' === 'true';
 var timezone = '{%timezone%}';
 var version = '{%version%}';
-var functionsEnabled = '{%features.functions%}' === 'true';
 
 // Cloud Providers
 var appengine = {
   defaults: {
     account: '{%appengine.default.account%}',
-    editLoadBalancerStageEnabled: '{%appengine.enabled%}' === 'true',
   },
 };
 var aws = {
   defaults: {
     account: '{%aws.default.account%}',
-    iamRole: 'BaseIAMRole',
     region: '{%aws.default.region%}',
   },
-  defaultSecurityGroups: [],
-  loadBalancers: {
-    // if true, VPC load balancers will be created as internal load balancers if the selected subnet has a purpose
-    // tag that starts with "internal"
-    inferInternalFlagFromSubnet: false,
-  },
-  useAmiBlockDeviceMappings: false,
 };
 var azure = {
   defaults: {
@@ -90,16 +70,6 @@ var gce = {
     region: '{%google.default.region%}',
     zone: '{%google.default.zone%}',
   },
-  associatePublicIpAddress: true,
-};
-var kubernetes = {
-  defaults: {
-    account: '{%kubernetes.default.account%}',
-    instanceLinkTemplate: '{{host}}/api/v1/proxy/namespaces/{{namespace}}/pods/{{name}}',
-    internalDNSNameTemplate: '{{name}}.{{namespace}}.svc.cluster.local',
-    namespace: '{%kubernetes.default.namespace%}',
-    proxy: '{%kubernetes.default.proxy%}',
-  },
 };
 var huaweicloud = {
   defaults: {
@@ -107,17 +77,16 @@ var huaweicloud = {
     region: '{%huaweicloud.default.region%}',
   },
 };
-var oracle = {
+var tencentcloud = {
   defaults: {
-    account: '{%oracle.default.account%}',
-    region: '{%oracle.default.region%}',
+    account: '{%tencentcloud.default.account%}',
+    region: '{%tencentcloud.default.region%}',
   },
 };
 
 window.spinnakerSettings = {
   authEnabled: authEnabled,
   authEndpoint: authEndpoint,
-  authTtl: 600000,
   bakeryDetailUrl: bakeryDetailUrl,
   canary: {
     atlasWebComponentsUrl: atlasWebComponentsUrl,
@@ -131,50 +100,16 @@ window.spinnakerSettings = {
     storageAccountName: defaultStorageAccountName,
     templatesEnabled: templatesEnabled,
   },
-  changelog: {
-    fileName: changelogGistName,
-    gistId: changelogGistId,
-  },
-  checkForUpdates: false,
   defaultInstancePort: 80,
-  defaultProviders: [
-    'appengine',
-    'aws',
-    'azure',
-    'cloudfoundry',
-    'dcos',
-    'ecs',
-    'gce',
-    'huaweicloud',
-    'kubernetes',
-    'oracle',
-    'titus',
-  ],
   defaultTimeZone: timezone, // see http://momentjs.com/timezone/docs/#/data-utilities/
   feature: {
     canary: mineCanaryEnabled,
     chaosMonkey: chaosEnabled,
-    displayTimestampsInUserLocalTime: displayTimestampsInUserLocalTime,
-    entityTags: entityTagsEnabled,
     fiatEnabled: fiatEnabled,
-    gceScaleDownControlsEnabled: gceScaleDownControlsEnabled,
-    gceStatefulMigsEnabled: gceStatefulMigsEnabled,
-    iapRefresherEnabled: iapRefresherEnabled,
-    notifications: notificationsEnabled,
-    pagerDuty: false,
-    pipelines: true,
     pipelineTemplates: pipelineTemplatesEnabled,
     roscoMode: true,
-    slack: false,
-    snapshots: false,
-    functions: functionsEnabled,
   },
   gateUrl: gateHost,
-  gitSources: ['bitbucket', 'gitlab', 'github', 'stash'],
-  maxPipelineAgeDays: maxPipelineAgeDays,
-  newApplicationDefaults: {
-    chaosMonkey: false,
-  },
   notifications: {
     bearychat: {
       enabled: true,
@@ -195,11 +130,6 @@ window.spinnakerSettings = {
     slack: slack,
     sms: sms,
   },
-  onDemandClusterThreshold: onDemandClusterThreshold,
-  pagerDuty: {
-    required: false,
-  },
-  pollSchedule: 30000,
   providers: {
     appengine: appengine,
     aws: aws,
@@ -209,30 +139,9 @@ window.spinnakerSettings = {
     ecs: ecs,
     gce: gce,
     huaweicloud: huaweicloud,
-    kubernetes: kubernetes,
-    oracle: oracle,
-    titus: {
-      defaults: {
-        account: 'titustestvpc',
-        iamProfile: '{{application}}InstanceProfile',
-        region: 'us-east-1',
-      },
-    },
+    kubernetes: {},
+    oracle: {},
+    tencentcloud: tencentcloud,
   },
-  pubsubProviders: ['amazon', 'google'],
-  triggerTypes: [
-    'artifactory',
-    'nexus',
-    'concourse',
-    'cron',
-    'docker',
-    'git',
-    'jenkins',
-    'pipeline',
-    'pubsub',
-    'travis',
-    'webhook',
-    'wercker',
-  ],
   version: version,
 };

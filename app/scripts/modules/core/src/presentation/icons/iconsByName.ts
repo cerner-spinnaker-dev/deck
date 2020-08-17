@@ -1,11 +1,15 @@
 import { ReactComponent as accordionCollapse } from './vectors/accordionCollapse.svg';
 import { ReactComponent as accordionExpand } from './vectors/accordionExpand.svg';
 import { ReactComponent as accordionExpandAll } from './vectors/accordionExpandAll.svg';
+import { ReactComponent as add } from './vectors/add.svg';
 import { ReactComponent as artifact } from './vectors/artifact.svg';
 import { ReactComponent as artifactApproved } from './vectors/artifactApproved.svg';
+import { ReactComponent as artifactBad } from './vectors/artifactBad.svg';
 import { ReactComponent as artifactPending } from './vectors/artifactPending.svg';
 import { ReactComponent as artifactSkipped } from './vectors/artifactSkipped.svg';
 import { ReactComponent as build } from './vectors/build.svg';
+import { ReactComponent as buildFail } from './vectors/buildFail.svg';
+import { ReactComponent as buildSuccess } from './vectors/buildSuccess.svg';
 import { ReactComponent as caretRight } from './vectors/caretRight.svg';
 import { ReactComponent as checkBadge } from './vectors/checkBadge.svg';
 import { ReactComponent as checkboxIndeterminate } from './vectors/checkboxIndeterminate.svg';
@@ -19,19 +23,31 @@ import { ReactComponent as cloudProgress } from './vectors/cloudProgress.svg';
 import { ReactComponent as cloudDecommissioned } from './vectors/cloudDecommissioned.svg';
 import { ReactComponent as cluster } from './vectors/cluster.svg';
 import { ReactComponent as copyClipboard } from './vectors/copyClipboard.svg';
+import { ReactComponent as done } from './vectors/done.svg';
+import { ReactComponent as duplicate } from './vectors/duplicate.svg';
+import { ReactComponent as edit } from './vectors/edit.svg';
 import { ReactComponent as environment } from './vectors/environment.svg';
+import { ReactComponent as fileJson } from './vectors/fileJson.svg';
 import { ReactComponent as fn } from './vectors/fn.svg';
 import { ReactComponent as fnNew } from './vectors/fnNew.svg';
+import { ReactComponent as heart } from './vectors/heart.svg';
+import { ReactComponent as history } from './vectors/history.svg';
 import { ReactComponent as instances } from './vectors/instances.svg';
 import { ReactComponent as loadBalancer } from './vectors/loadBalancer.svg';
 import { ReactComponent as manualJudgement } from './vectors/manualJudgement.svg';
 import { ReactComponent as manualJudgementApproved } from './vectors/manualJudgementApproved.svg';
 import { ReactComponent as manualJudgementRejected } from './vectors/manualJudgementRejected.svg';
+import { ReactComponent as menu } from './vectors/menu.svg';
+import { ReactComponent as menuClose } from './vectors/menuClose.svg';
 import { ReactComponent as pin } from './vectors/pin.svg';
 import { ReactComponent as placeholder } from './vectors/placeholder.svg';
+import { ReactComponent as play } from './vectors/play.svg';
 import { ReactComponent as securityGroup } from './vectors/securityGroup.svg';
 import { ReactComponent as servergroupAws } from './vectors/servergroupAws.svg';
 import { ReactComponent as spel } from './vectors/spel.svg';
+import { ReactComponent as toggleOff } from './vectors/toggleOff.svg';
+import { ReactComponent as toggleOn } from './vectors/toggleOn.svg';
+import { ReactComponent as unpin } from './vectors/unpin.svg';
 
 // Icons prefixed sp* are intended for use with the current Spinnaker UI design. They are visually heavier.
 import { ReactComponent as spCIBranch } from './vectors/spCIBranch.svg';
@@ -41,11 +57,15 @@ import { ReactComponent as spCIMaster } from './vectors/spCIMaster.svg';
 import { ReactComponent as spCIMerged } from './vectors/spCIMerged.svg';
 import { ReactComponent as spCIPullRequest } from './vectors/spCIPullRequest.svg';
 import { ReactComponent as spCIPullRequestClosed } from './vectors/spCIPullRequestClosed.svg';
+import { ReactComponent as spEnvironments } from './vectors/spEnvironments.svg';
+import { ReactComponent as spMenuAppInSync } from './vectors/spMenuAppInSync.svg';
+import { ReactComponent as spMenuAppUnsynced } from './vectors/spMenuAppUnsynced.svg';
 import { ReactComponent as spMenuCanaryConfig } from './vectors/spMenuCanaryConfig.svg';
 import { ReactComponent as spMenuCanaryReport } from './vectors/spMenuCanaryReport.svg';
 import { ReactComponent as spMenuClusters } from './vectors/spMenuClusters.svg';
 import { ReactComponent as spMenuConfig } from './vectors/spMenuConfig.svg';
 import { ReactComponent as spMenuLoadBalancers } from './vectors/spMenuLoadBalancers.svg';
+import { ReactComponent as spMenuMeme } from './vectors/spMenuMeme.svg';
 import { ReactComponent as spMenuPager } from './vectors/spMenuPager.svg';
 import { ReactComponent as spMenuPipelines } from './vectors/spMenuPipelines.svg';
 import { ReactComponent as spMenuProperties } from './vectors/spMenuProperties.svg';
@@ -66,6 +86,7 @@ import { ReactComponent as mdActuationLaunched } from './vectors/mdActuationLaun
 import { ReactComponent as mdCreated } from './vectors/mdCreated.svg';
 import { ReactComponent as mdDeltaDetected } from './vectors/mdDeltaDetected.svg';
 import { ReactComponent as mdDeltaResolved } from './vectors/mdDeltaResolved.svg';
+import { ReactComponent as mdDelay } from './vectors/mdDelay.svg';
 import { ReactComponent as mdDiff } from './vectors/mdDiff.svg';
 import { ReactComponent as mdError } from './vectors/mdError.svg';
 import { ReactComponent as mdUnhappy } from './vectors/mdUnhappy.svg';
@@ -78,6 +99,7 @@ import { ReactComponent as mdConstraintAllowedTimes } from './vectors/mdConstrai
 import { ReactComponent as md } from './vectors/md.svg';
 
 // MEME Templating
+import { ReactComponent as config } from './vectors/config.svg';
 import { ReactComponent as configJ } from './vectors/configJ.svg';
 import { ReactComponent as configM } from './vectors/configM.svg';
 import { ReactComponent as configS } from './vectors/configS.svg';
@@ -86,15 +108,28 @@ import { ReactComponent as templateFull } from './vectors/templateFull.svg';
 import { ReactComponent as templateWorkflow } from './vectors/templateWorkflow.svg';
 import { ReactComponent as templateS } from './vectors/templateS.svg';
 
+// Form Fields
+import { ReactComponent as formDrag } from './vectors/formDrag.svg';
+import { ReactComponent as formError } from './vectors/formError.svg';
+import { ReactComponent as formInfo } from './vectors/formInfo.svg';
+import { ReactComponent as formNetworkBad } from './vectors/formNetworkBad.svg';
+import { ReactComponent as formNetworkGood } from './vectors/formNetworkGood.svg';
+import { ReactComponent as formRefresh } from './vectors/formRefresh.svg';
+import { ReactComponent as formWarning } from './vectors/formWarning.svg';
+
 export const iconsByName = {
   accordionCollapse,
   accordionExpand,
   accordionExpandAll,
+  add,
   artifact,
   artifactApproved,
+  artifactBad,
   artifactPending,
   artifactSkipped,
   build,
+  buildFail,
+  buildSuccess,
   canaryConfig,
   canaryFail,
   canaryRunning,
@@ -112,13 +147,27 @@ export const iconsByName = {
   cloudProgress,
   cloudDecommissioned,
   cluster,
+  config,
   configJ,
   configM,
   configS,
   copyClipboard,
+  done,
+  duplicate,
+  edit,
   environment,
+  fileJson,
   fn,
   fnNew,
+  formDrag,
+  formError,
+  formInfo,
+  formNetworkBad,
+  formNetworkGood,
+  formRefresh,
+  formWarning,
+  heart,
+  history,
   instances,
   loadBalancer,
   manualJudgement,
@@ -127,6 +176,7 @@ export const iconsByName = {
   mdActuating,
   mdActuationLaunched,
   mdCreated,
+  mdDelay,
   mdDeltaDetected,
   mdDeltaResolved,
   mdDiff,
@@ -139,8 +189,11 @@ export const iconsByName = {
   mdConstraintDependsOn,
   mdConstraintAllowedTimes,
   md,
+  menu,
+  menuClose,
   pin,
   placeholder,
+  play,
   resourceT,
   securityGroup,
   servergroupAws,
@@ -151,11 +204,15 @@ export const iconsByName = {
   spCIMerged,
   spCIPullRequest,
   spCIPullRequestClosed,
+  spEnvironments,
+  spMenuAppInSync,
+  spMenuAppUnsynced,
   spMenuCanaryConfig,
   spMenuCanaryReport,
   spMenuClusters,
   spMenuConfig,
   spMenuLoadBalancers,
+  spMenuMeme,
   spMenuPager,
   spMenuPipelines,
   spMenuProperties,
@@ -166,4 +223,7 @@ export const iconsByName = {
   templateFull,
   templateS,
   templateWorkflow,
+  toggleOff,
+  toggleOn,
+  unpin,
 } as const;

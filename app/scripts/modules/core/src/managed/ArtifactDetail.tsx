@@ -15,6 +15,8 @@ import { VersionStateCard } from './VersionStateCard';
 import { StatusCard } from './StatusCard';
 import { Button } from './Button';
 import { showPinArtifactModal } from './PinArtifactModal';
+import { showUnpinArtifactModal } from './UnpinArtifactModal';
+import { showMarkArtifactAsBadModal } from './MarkArtifactAsBadModal';
 
 import { ConstraintCard } from './constraints/ConstraintCard';
 import { isConstraintSupported } from './constraints/constraintRegistry';
@@ -54,7 +56,10 @@ const cardTransitionConfig = {
   config: { mass: 1, tension: 600, friction: 40 },
 } as UseTransitionProps<JSX.Element, React.CSSProperties>;
 
-type IEnvironmentCardsProps = Pick<IArtifactDetailProps, 'application' | 'version' | 'allVersions'> & {
+type IEnvironmentCardsProps = Pick<
+  IArtifactDetailProps,
+  'application' | 'reference' | 'version' | 'allVersions' | 'resourcesByEnvironment'
+> & {
   environment: IManagedArtifactSummary['versions'][0]['environments'][0];
 };
 
@@ -68,11 +73,14 @@ const EnvironmentCards = memo(
       replacedAt,
       replacedBy,
       pinned,
+      vetoed,
       statefulConstraints,
       statelessConstraints,
     },
-    version: { version },
+    reference,
+    version: versionDetails,
     allVersions,
+    resourcesByEnvironment,
   }: IEnvironmentCardsProps) => {
     const pinnedAtMillis = pinned?.at ? DateTime.fromISO(pinned.at).toMillis() : null;
 
@@ -88,6 +96,22 @@ const EnvironmentCards = memo(
           </span>
         }
         description={pinned.comment && <Markdown message={pinned.comment} tag="span" />}
+        actions={
+          <Button
+            iconName="unpin"
+            onClick={() =>
+              showUnpinArtifactModal({
+                application,
+                reference,
+                version: versionDetails,
+                resourcesByEnvironment,
+                environment: environmentName,
+              }).then(({ status }) => status === 'CLOSED' && application.getDataSource('environments').refresh())
+            }
+          >
+            Unpin
+          </Button>
+        }
       />
     );
     const versionStateCard = (
@@ -97,6 +121,7 @@ const EnvironmentCards = memo(
         deployedAt={deployedAt}
         replacedAt={replacedAt}
         replacedBy={replacedBy}
+        vetoed={vetoed}
         allVersions={allVersions}
       />
     );
@@ -109,11 +134,12 @@ const EnvironmentCards = memo(
               key={constraint.type}
               application={application}
               environment={environmentName}
-              version={version}
+              reference={reference}
+              version={versionDetails.version}
               constraint={constraint}
             />
           )),
-      [application, environmentName, version, statefulConstraints, statelessConstraints],
+      [application, environmentName, versionDetails.version, statefulConstraints, statelessConstraints],
     );
 
     const transitions = useTransition(
@@ -167,6 +193,7 @@ export const ArtifactDetail = ({
   useEventListener(document, 'keydown', keydownCallback);
 
   const isPinnedEverywhere = environments.every(({ pinned }) => pinned);
+  const isBadEverywhere = environments.every(({ state }) => state === 'vetoed');
 
   return (
     <>
@@ -174,18 +201,35 @@ export const ArtifactDetail = ({
 
       <div className="ArtifactDetail">
         <div className="flex-container-h sp-margin-xl-bottom">
-          <Button
-            iconName="pin"
-            appearance="primary"
-            disabled={isPinnedEverywhere}
-            onClick={() =>
-              showPinArtifactModal({ application, reference, version: versionDetails, resourcesByEnvironment }).then(
-                ({ status }) => status === 'CLOSED' && application.getDataSource('environments').refresh(),
-              )
-            }
-          >
-            Pin
-          </Button>
+          <div className="flex-container-h sp-group-margin-s-xaxis">
+            <Button
+              iconName="pin"
+              appearance="primary"
+              disabled={isPinnedEverywhere || isBadEverywhere}
+              onClick={() =>
+                showPinArtifactModal({ application, reference, version: versionDetails, resourcesByEnvironment }).then(
+                  ({ status }) => status === 'CLOSED' && application.getDataSource('environments').refresh(),
+                )
+              }
+            >
+              Pin...
+            </Button>
+            <Button
+              iconName="artifactBad"
+              appearance="primary"
+              disabled={isPinnedEverywhere || isBadEverywhere}
+              onClick={() =>
+                showMarkArtifactAsBadModal({
+                  application,
+                  reference,
+                  version: versionDetails,
+                  resourcesByEnvironment,
+                }).then(({ status }) => status === 'CLOSED' && application.getDataSource('environments').refresh())
+              }
+            >
+              Mark as bad...
+            </Button>
+          </div>
           <div className="detail-section-right">{/* artifact metadata will live here */}</div>
         </div>
         {environments.map(environment => {
@@ -200,8 +244,10 @@ export const ArtifactDetail = ({
                 <EnvironmentCards
                   application={application}
                   environment={environment}
+                  reference={reference}
                   version={versionDetails}
                   allVersions={allVersions}
+                  resourcesByEnvironment={resourcesByEnvironment}
                 />
               </div>
               <div className="sp-margin-l-top">
